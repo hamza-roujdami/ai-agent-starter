@@ -4,7 +4,7 @@ tools: ['search', 'web/fetch', 'usages']
 handoffs:
   - label: Start Implementation
     agent: implementer
-    prompt: Implement the agent from docs/SPEC.md. Start with the MAF agent in src/, then skills, FastAPI, and the mock backend. Write tests as you go.
+    prompt: Implement the agent from docs/SPEC.md. Start with the MAF agent in app/src/, then skills, FastAPI, and the mock backend. Write tests as you go.
     send: false
 ---
 

@@ -5,7 +5,7 @@ Open it in VS Code and GitHub Copilot is pre-configured with the stack, coding r
 agents, and slash commands — so you go from an AI use case to a working, deployable prototype fast.
 
 > It ships **configuration + an empty project skeleton**, not application code. The agent for *your*
-> use case is generated into `src/`, `skills/`, `infra/`, etc. by the built-in Copilot agents.
+> use case is generated into `app/src/`, `app/skills/`, `infra/`, etc. by the built-in Copilot agents.
 
 ---
 
