@@ -1,67 +1,124 @@
 # ai-agent-starter
 
-Reusable **Layer A** starter for AI agent engagements. Clone it per customer use case and open it in
-VS Code — GitHub Copilot is instantly configured with your stack, rules, agents, and slash commands.
+A ready-to-clone baseline for building **AI agents on Azure with the Microsoft Agent Framework (MAF)**.
+Open it in VS Code and GitHub Copilot is pre-configured with the stack, coding rules, three specialized
+agents, and slash commands — so you go from an AI use case to a working, deployable prototype fast.
 
-> This is the **build-assistant configuration + project skeleton**. The actual customer agent
-> (the deliverable) gets built into `src/`, `skills/`, etc. per engagement.
+> It ships **configuration + an empty project skeleton**, not application code. The agent for *your*
+> use case is generated into `src/`, `skills/`, `infra/`, etc. by the built-in Copilot agents.
 
-## Stage 1 — Assess & Design (your "plan mode")
+---
 
-For discovery and architecture, use the **`architect` agent** (via `/init-engagement` or the agent
-dropdown) — it's your plan mode, specialized for these engagements: **read-only** (no code edits),
-it interviews you, debates the agent topology (single vs multi-agent vs workflow), and produces
-`docs/context.md`, `docs/SPEC.md`, and `README.md` with two diagrams (agent internals + solution
-architecture). It follows **Anthropic's _Building Effective Agents_** design principles and the
-topology decision in [AGENTS.md](AGENTS.md) Part 1 — start simplest, add complexity only when it pays.
+## What you get
 
-## Prerequisites (set up once on your machine)
+The prototype you build with this starter is a **self-hosted MAF agent on Azure Container Apps**:
 
-- **VS Code** + **GitHub Copilot** (agent mode). Models: any Copilot model (Claude recommended).
-- **Azure Skills** installed (the `azure-prepare` → `azure-validate` → `azure-deploy` family, plus
-  `microsoft-foundry`, `azure-rbac`, `azure-ai`, `appinsights-instrumentation`). See
-  [Azure Skills](https://learn.microsoft.com/azure/developer/azure-skills/overview).
-- **One global MCP setup** in your VS Code user `mcp.json` (`MCP: Open User Configuration`):
-  **Azure MCP** + **Microsoft Foundry MCP** + **Bicep MCP** (Foundry/Bicep come from the AI Toolkit
-  & Bicep extensions). Optional: **Work IQ MCP** (M365 meeting/email context for discovery).
-- **Azure**: a subscription + `az login`; Foundry access for model deployments.
-- *(Optional, recommended)* local clones the agents can consult for patterns — see *References* below.
-
-## Use it
-
-Use this repo as a **GitHub template** (or `git clone`) into a new folder per use case, then open it:
-
-```bash
-git clone <this-repo-url> my-usecase && cd my-usecase && code .
+```mermaid
+flowchart LR
+    U[Users] --> API[FastAPI + AG-UI/DevUI]
+    API --> AG[MAF agent + skills]
+    AG --> F[Foundry model]
+    AG -. RAG only .-> S[Azure AI Search]
+    AG --> KV[Key Vault]
+    AG --> ST[Storage]
+    AG --> AI[App Insights / Log Analytics]
+    ACR[Container Registry] --> AG
+    subgraph ACA[Azure Container Apps -- self-hosted, public]
+        API
+        AG
+    end
 ```
 
-Then in Copilot chat:
+**Stack:** MAF (Python 3.13) · FastAPI + AG-UI/DevUI · Azure Container Apps · Microsoft Foundry
+(models) · Key Vault · Storage · App Insights/Log Analytics · Container Registry · Bicep (AVM) ·
+`DefaultAzureCredential` everywhere. AI Search only for RAG; history is `FileHistoryProvider`
+(Cosmos is a productionization step). Public + simple — no VNet. Full details in [AGENTS.md](AGENTS.md).
 
-1. `/init-engagement` — the **architect** agent interviews you and writes `docs/context.md`,
-   `docs/SPEC.md`, and `README.md` (with Mermaid diagrams).
-2. Switch to the **implementer** agent (or use the handoff) — builds the MAF agent, skills, FastAPI,
-   mock backend, and tests in `src/`, `skills/`, `mock/`, `tests/`.
-3. `/eval` — run tests + Foundry evaluation (pass/fail with evidence).
-4. `/scaffold-infra` — `azure-prepare` → `azure-validate` → `azure-deploy` to Azure Container Apps.
-5. Switch to the **reviewer** agent — OWASP + `DefaultAzureCredential` + least-privilege RBAC pass.
+---
 
-## What's in here (Layer A)
+## How it works
+
+Three specialized GitHub Copilot agents hand off to each other across the build:
+
+```mermaid
+flowchart LR
+    A["architect -- assess and design"] --> I["implementer -- build"]
+    I --> R["reviewer -- security and quality"]
+```
+
+| Agent | Role |
+|---|---|
+| **architect** | Read-only "plan mode". Interviews you, debates the agent topology (single vs multi-agent vs workflow), derives the Azure services your design needs, and writes the spec + architecture diagrams. Follows Anthropic's _Building Effective Agents_ principles. |
+| **implementer** | Builds the MAF agent, skills, FastAPI app, mock backend, and tests from the spec. Grounds the design in real MAF built-ins; provisions only the derived services. |
+| **reviewer** | Adversarial security & quality pass: OWASP + agentic-AI risks, `DefaultAzureCredential`, least-privilege RBAC, spec conformance. |
+
+---
+
+## Prerequisites
+
+Set up once on your machine:
+
+- **VS Code** + **GitHub Copilot** (agent mode). Any Copilot model (Claude recommended).
+- **Azure Skills** — `azure-prepare` → `azure-validate` → `azure-deploy`, plus `microsoft-foundry`,
+  `azure-rbac`, `azure-ai`, `appinsights-instrumentation`.
+  See [Azure Skills](https://learn.microsoft.com/azure/developer/azure-skills/overview).
+- **MCP servers** in your VS Code **user** config (`MCP: Open User Configuration`): **Azure MCP**,
+  **Microsoft Foundry MCP**, **Bicep MCP** (Foundry/Bicep come from the AI Toolkit & Bicep extensions).
+  Optional: **Work IQ MCP** for pulling M365 meeting/email context during discovery.
+- **Azure** subscription + `az login`, with Microsoft Foundry access for model deployments.
+
+---
+
+## Get started
+
+**1. Clone into a new folder per use case and open it:**
+
+```bash
+git clone https://github.com/hamza-roujdami/ai-agent-starter my-usecase && cd my-usecase && code .
+```
+
+**2. (Optional) link the MAF source so agents can cite real samples, and set up local env:**
+
+```bash
+mkdir -p references
+git clone https://github.com/microsoft/agent-framework references/agent-framework
+cp .env.example .env            # fill in, then: az login
+python3.13 -m venv .venv && source .venv/bin/activate
+```
+
+**3. Drive the workflow from Copilot chat:**
+
+| Step | Command / agent | Output |
+|---|---|---|
+| 1. Assess & design | `/init-engagement` (architect) | `docs/context.md`, `docs/SPEC.md`, `README.md` + diagrams |
+| 2. Build | implementer (via handoff) | MAF agent, skills, FastAPI, mock backend, tests |
+| 3. Prove | `/eval` | tests + Foundry evaluation (pass/fail with evidence) |
+| 4. Deploy | `/scaffold-infra` | `azure-prepare` → `azure-validate` → `azure-deploy` to ACA |
+| 5. Review | reviewer (via handoff) | security & quality findings |
+
+> Tip: bring your customer meeting notes into the chat (or let Work IQ pull them) before
+> `/init-engagement` — the architect designs from that context.
+
+---
+
+## What's in the repo
 
 | Path | Purpose |
 |---|---|
-| `AGENTS.md` | Stack lock — read by Copilot every chat (portable, also read by Claude tools) |
+| `AGENTS.md` | Stack lock + agent-design reference — read by Copilot on every chat |
 | `.github/copilot-instructions.md` | Imports `AGENTS.md` + VS Code specifics |
-| `.github/instructions/*.instructions.md` | Auto-applied rules: Python/MAF, Bicep/AVM, FastAPI, azure-prepare constraint |
-| `.github/agents/*.agent.md` | `architect` → `implementer` → `reviewer` (with handoffs) |
-| `.github/prompts/*.prompt.md` | `/init-engagement`, `/scaffold-infra`, `/eval` |
-| `infra/ src/ skills/ mock/ kb/ tests/ docs/` | Project skeleton |
+| `.github/instructions/*.instructions.md` | Auto-applied coding rules: Python/MAF, Bicep/AVM, FastAPI, deploy constraints |
+| `.github/agents/*.agent.md` | The `architect` → `implementer` → `reviewer` agents (with handoffs) |
+| `.github/prompts/*.prompt.md` | Slash commands: `/init-engagement`, `/scaffold-infra`, `/eval` |
+| `infra/ src/ skills/ mock/ kb/ tests/ docs/` | Empty project skeleton (filled per use case) |
 
-> MCP is **not** configured per repo. All MCP servers live in your single global
-> user-level `mcp.json` (+ extension-contributed Foundry/Bicep). See *Prerequisites* above.
+MCP is **not** configured per repo — it lives in your single global user `mcp.json` (see Prerequisites).
 
-## What's committed vs generated
+---
 
-| Committed (the baseline you clone) | Generated per engagement (by the agents) |
+## Committed vs generated
+
+| Committed (the baseline you clone) | Generated per use case (by the agents) |
 |---|---|
 | `AGENTS.md`, `README.md`, `.gitignore`, `.env.example` | `docs/context.md`, `docs/SPEC.md` (architect) |
 | `.github/` instructions, agents, prompts | `src/*.py`, `pyproject.toml` (implementer) |
@@ -69,36 +126,5 @@ Then in Copilot chat:
 | | `skills/*/SKILL.md`, `mock/*`, `kb/*`, `tests/*` |
 | | Local only (gitignored): `.venv/`, `.env`, `.azure/`, `references/` |
 
-The baseline carries **config + empty skeleton**. Everything in `src/`, `infra/`, `skills/`, etc. is
-written per use case — the folders ship with a README placeholder so the agents know what goes where.
-
-## The fixed stack (the deliverable)
-
-Self-hosted **MAF** (Python) → **FastAPI** + AG-UI/DevUI → **Azure Container Apps**, using
-**Foundry** (models), **Storage**, **Key Vault**, **App Insights/Log Analytics**, **Container
-Registry**, **Bicep (AVM)**, `DefaultAzureCredential` everywhere. **AI Search** only for RAG;
-history is **FileHistoryProvider** (Cosmos is a productionization step). Public + simple, no VNet.
-See [AGENTS.md](AGENTS.md).
-
-## Relies on (global, set once on your machine)
-
-- **One global MCP setup** — the VS Code user-level `mcp.json` (Azure MCP, Foundry MCP, Bicep MCP;
-  optional Work IQ). No per-repo MCP files.
-- **Azure Skills** (`azure-prepare`, `azure-validate`, `azure-deploy`, `microsoft-foundry`,
-  `azure-rbac`, `azure-ai`, `appinsights-instrumentation`). The agents reference these by name.
-
-## References (optional, recommended)
-
-The agents consult these for real MAF patterns and the landing-zone reference. Clone them anywhere
-and link into `references/` (gitignored), e.g.:
-
-```bash
-mkdir -p references
-git clone https://github.com/microsoft/agent-framework references/agent-framework
-# (optional) the GenAI app landing-zone bicep pattern, if you use it:
-# git clone <ai-landing-zone-repo> references/bicep-ptn-aiml-landing-zone
-cp .env.example .env   # then fill in, and run: az login
-python3.13 -m venv .venv && source .venv/bin/activate
-```
-
-If `references/agent-framework` is absent, the agents still work — they just can't cite local samples.
+The baseline carries **config + empty skeleton**. The folders ship with a README placeholder so the
+agents know what goes where; everything else is written per use case.
