@@ -166,9 +166,12 @@ Replace `app/mock/` with real APIs · swap FileHistoryProvider → CosmosHistory
 add prod auth (OBO/SP) · add Purview middleware if required · add Teams channel ·
 deploy to ACA with CI/CD.
 
-## References (optional, gitignored)
+## References (gitignored — clone or symlink into `references/`)
 
-Clone or symlink these into `references/` for the agents to consult patterns (see README setup):
+The agents grep these on disk (workspace search can't see GitHub directly). See README setup.
 
-- **MAF source** → `references/agent-framework` (github.com/microsoft/agent-framework)
-- **AI Landing Zone** → `references/bicep-ptn-aiml-landing-zone` (Microsoft GenAI app landing zone)
+- **MAF source** (required) → `references/agent-framework` (github.com/microsoft/agent-framework).
+  The architect/implementer cite real built-ins and samples from here. Keep it fresh (`git pull`).
+- **AI Landing Zone** (optional) → `references/bicep-ptn-aiml-landing-zone` (Microsoft GenAI app
+  landing zone). Productionization reference only — prefer the **GitHub MCP** (fetch-on-demand);
+  clone only if consulted often.

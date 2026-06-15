@@ -77,7 +77,7 @@ Set up once on your machine:
 git clone https://github.com/hamza-roujdami/ai-agent-starter my-usecase && cd my-usecase && code .
 ```
 
-**2. (Optional) link the MAF source so agents can cite real samples, and set up local env:**
+**2. Clone the MAF source and set up local env:**
 
 ```bash
 mkdir -p references
@@ -85,6 +85,17 @@ git clone https://github.com/microsoft/agent-framework references/agent-framewor
 cp .env.example .env            # fill in, then: az login
 python3.13 -m venv .venv && source .venv/bin/activate
 ```
+
+> **Why clone MAF?** The `architect` and `implementer` grep `references/agent-framework`
+> for real built-ins and samples — the workspace search tools only see files **on disk**, not
+> GitHub. Keep it fresh with `git -C references/agent-framework pull` at engagement start.
+> The **AI Landing Zone** ([`bicep-ptn-aiml-landing-zone`](https://github.com/Azure/bicep-ptn-aiml-landing-zone))
+> is a productionization reference only — leave it to the **GitHub MCP** (fetch-on-demand) and
+> clone it into `references/` *only if* you find yourself reading it often.
+>
+> **Repeat users:** keep one shared clone (e.g. `~/references/agent-framework`) and symlink it
+> instead of re-cloning per repo — `ln -s ~/references/agent-framework references/agent-framework`.
+> `references/` is gitignored, so clone or symlink, it's never committed.
 
 **3. Drive the workflow from Copilot chat:**
 
