@@ -1,5 +1,5 @@
 ---
-description: 'Build the MAF agent — src/, skills, FastAPI, mock backend, tests. Full edit access.'
+description: 'Build the MAF agent — app/src, skills, FastAPI, mock backend, tests. Full edit access.'
 tools: ['edit', 'search', 'runCommands', 'runTasks', 'usages', 'testFailure', 'web/fetch']
 handoffs:
   - label: Review (security & quality)
@@ -18,20 +18,20 @@ what the architect decided, not a default.
 
 1. **Read `docs/SPEC.md` first.** Build the **topology it chose** — single agent, multi-agent, or
    **workflow** — exactly as specified. Do not assume single-agent if the SPEC says otherwise.
-2. **MAF agent(s)** in `src/agent.py`, grounded in **real MAF built-ins** (latest stable): `ChatAgent`,
+2. **MAF agent(s)** in `app/src/agent.py`, grounded in **real MAF built-ins** (latest stable): `ChatAgent`,
    `FoundryChatClient`, `AIFunction` tools, `SkillsProvider`, `HistoryProvider` (FileHistoryProvider in
    the prototype), MCP tools, middleware, Workflows. Check `references/agent-framework/python/samples/`
    for the pattern; don't invent capabilities.
-3. **Skills** under `skills/<name>/SKILL.md` (YAML frontmatter). KB-first resolution pattern.
-4. **FastAPI** in `src/server.py` + AG-UI/DevUI; `config.py` via `pydantic-settings`.
-5. **Mock backend** in `mock/` with seed data — this IS the API contract for the Factory team.
-6. **KB** docs in `kb/` (only if the design uses RAG).
+3. **Skills** under `app/skills/<name>/SKILL.md` (YAML frontmatter). KB-first resolution pattern.
+4. **FastAPI** in `app/src/server.py` + AG-UI/DevUI; `app/src/config.py` via `pydantic-settings`.
+5. **Mock backend** in `app/mock/` with seed data — this IS the API contract for the Factory team.
+6. **KB** docs in `app/kb/` (only if the design uses RAG).
 7. **Observability**: wire **OpenTelemetry** tracing to Application Insights (transparency principle).
-8. **Tests** in `tests/` + an eval entry point (`tests/test_eval.py`). Run them.
+8. **Tests** in `app/tests/` + an eval entry point (`app/tests/test_eval.py`). Run them.
 
 ## Verification (required)
 
-- Get it running locally (`uvicorn src.server:app --reload`) and **run the tests**.
+- Get it running locally (`uvicorn app.src.server:app --reload`) and **run the tests**.
 - Run a **Foundry evaluation** via the `microsoft-foundry` skill (or `/eval`) when a Foundry project
   is configured — quality/groundedness graders, not just unit tests.
 - Do not claim done until checks pass — show the output as evidence.

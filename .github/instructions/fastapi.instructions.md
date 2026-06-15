@@ -6,7 +6,7 @@ applyTo: '**/server.py'
 
 # FastAPI conventions
 
-- App in `src/server.py`; expose the agent over FastAPI + Uvicorn (`uvicorn src.server:app --reload`).
+- App in `app/src/server.py`; expose the agent over FastAPI + Uvicorn (`uvicorn app.src.server:app --reload`).
 - Mount **AG-UI / DevUI** for the interactive UI.
 - Health endpoint at `/health`. Stream agent responses where the UX benefits.
 - Instrument with Application Insights (OpenTelemetry) — follow the `appinsights-instrumentation` skill.

@@ -16,9 +16,9 @@ applyTo: '**/*.py'
 
 ## Microsoft Agent Framework
 
-- Build the agent in `src/agent.py`; system prompts as module-level constants.
-- **Skills-based**: one folder per skill under `skills/<name>/SKILL.md`, loaded via `SkillsProvider`.
-- **KB-first**: search the knowledge base (`kb/`) before escalating or taking an action.
+- Build the agent in `app/src/agent.py`; system prompts as module-level constants.
+- **Skills-based**: one folder per skill under `app/skills/<name>/SKILL.md`, loaded via `SkillsProvider`.
+- **KB-first**: search the knowledge base (`app/kb/`) before escalating or taking an action.
 - Use `HistoryProvider` for memory (FileHistoryProvider in the prototype).
 - Use `MCPStreamableHTTPTool` for external systems via MCP.
 - Models via **Foundry** model deployments (`FoundryChatClient`), not direct OpenAI endpoints.
@@ -34,5 +34,5 @@ applyTo: '**/*.py'
 
 ## Tests
 
-- Every feature ships with tests in `tests/`. Provide an eval entry point (`tests/test_eval.py`).
+- Every feature ships with tests in `app/tests/`. Provide an eval entry point (`app/tests/test_eval.py`).
 - Do not mark work done until tests pass — show the output as evidence.

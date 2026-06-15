@@ -6,4 +6,4 @@ The MAF agent runtime (the deliverable) lives here:
 - `config.py` — pydantic-settings config (reads `.env`)
 - `server.py` — FastAPI app + AG-UI/DevUI
 
-Run locally: `uvicorn src.server:app --reload`
+Run locally (from repo root): `uvicorn app.src.server:app --reload`

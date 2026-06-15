@@ -18,7 +18,7 @@ applyTo: 'infra/**'
 - `ai-foundry.bicep` — Foundry account + project + model deployment
 - `container-apps.bicep` — ACA environment + the agent container app (managed identity enabled)
 - `container-registry.bicep` — Azure Container Registry (image source for ACA)
-- `storage.bicep` — Storage account (Foundry dependency + `kb/` staging)
+- `storage.bicep` — Storage account (Foundry dependency + `app/kb/` staging)
 - `key-vault.bicep` — Key Vault
 - `monitoring.bicep` — Log Analytics + Application Insights
 - `rbac.bicep` — role assignments for the container app's managed identity

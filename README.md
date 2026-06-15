@@ -110,7 +110,8 @@ python3.13 -m venv .venv && source .venv/bin/activate
 | `.github/instructions/*.instructions.md` | Auto-applied coding rules: Python/MAF, Bicep/AVM, FastAPI, deploy constraints |
 | `.github/agents/*.agent.md` | The `architect` → `implementer` → `reviewer` agents (with handoffs) |
 | `.github/prompts/*.prompt.md` | Slash commands: `/init-engagement`, `/scaffold-infra`, `/eval` |
-| `infra/ src/ skills/ mock/ kb/ tests/ docs/` | Empty project skeleton (filled per use case) |
+| `app/{src,skills,mock,kb,tests}` | The agent you build (empty skeleton, filled per use case) |
+| `infra/ docs/` | Deployment IaC and engagement design docs |
 
 MCP is **not** configured per repo — it lives in your single global user `mcp.json` (see Prerequisites).
 
@@ -121,9 +122,9 @@ MCP is **not** configured per repo — it lives in your single global user `mcp.
 | Committed (the baseline you clone) | Generated per use case (by the agents) |
 |---|---|
 | `AGENTS.md`, `README.md`, `.gitignore`, `.env.example` | `docs/context.md`, `docs/SPEC.md` (architect) |
-| `.github/` instructions, agents, prompts | `src/*.py`, `pyproject.toml` (implementer) |
-| Empty `src/ infra/ skills/ mock/ kb/ tests/ docs/` + READMEs | `infra/*.bicep` (azure-prepare) |
-| | `skills/*/SKILL.md`, `mock/*`, `kb/*`, `tests/*` |
+| `.github/` instructions, agents, prompts | `app/src/*.py`, `pyproject.toml` (implementer) |
+| Empty `app/{src,skills,mock,kb,tests}` + `infra/ docs/` + READMEs | `infra/*.bicep` (azure-prepare) |
+| | `app/skills/*/SKILL.md`, `app/mock/*`, `app/kb/*`, `app/tests/*` |
 | | Local only (gitignored): `.venv/`, `.env`, `.azure/`, `references/` |
 
 The baseline carries **config + empty skeleton**. The folders ship with a README placeholder so the

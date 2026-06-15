@@ -66,8 +66,8 @@ The architect designs by these, in order:
 ## MAF patterns
 
 - **Single agent by default** (`ChatAgent` + `FoundryChatClient`); escalate to multi-agent or **workflows** only with justification (see topology decision above).
-- **Skills-based**: modular skills under `skills/<name>/SKILL.md`, loaded via `SkillsProvider`.
-- **KB-first resolution**: always search the knowledge base (`kb/`) before escalating / acting.
+- **Skills-based**: modular skills under `app/skills/<name>/SKILL.md`, loaded via `SkillsProvider`.
+- **KB-first resolution**: always search the knowledge base (`app/kb/`) before escalating / acting.
 - `HistoryProvider` for memory (FileHistoryProvider in the prototype).
 - **Middleware** for cross-cutting concerns (guardrails, Purview) when needed.
 - **OpenTelemetry** tracing + **evals from day one** (give the agent a way to verify its work).
@@ -103,7 +103,7 @@ no VNet, RBAC + managed identity.** Network hardening is a productionization ste
 | Retrieval | **Azure AI Search** — *only when the use case needs RAG* |
 | State / history | **FileHistoryProvider** in the prototype (Cosmos DB is a productionization step) |
 | Secrets | **Key Vault** |
-| Storage | **Storage account** (Foundry dependency + `kb/` staging) |
+| Storage | **Storage account** (Foundry dependency + `app/kb/` staging) |
 | Observability | **Application Insights + Log Analytics** |
 | Identity | **`DefaultAzureCredential`** everywhere (managed identity in ACA, `az login` for dev) |
 | Config | **`pydantic-settings`** + `.env` |
@@ -144,7 +144,7 @@ Cosmos history, Purview, Defender, policy. Reference: `references/bicep-ptn-aiml
 ## Workflow (how I build, per use case)
 
 1. **Discover** — `/init-engagement` (architect agent): interview me, write `docs/context.md`, `docs/SPEC.md`, `README.md` with Mermaid.
-2. **Build** — implementer agent: MAF agent in `src/`, skills, FastAPI, mock backend in `mock/`. Always write `tests/`.
+2. **Build** — implementer agent: MAF agent in `app/src/`, skills, FastAPI, mock backend in `app/mock/`. Always write `app/tests/`.
 3. **Prove** — `/eval`: run tests + Foundry eval. Implementer hands to reviewer only when tests are green.
 4. **Infra + deploy** — `azure-prepare` → `azure-validate` → `azure-deploy` (constrained to the stack above).
 5. **Review** — reviewer agent: OWASP, `DefaultAzureCredential`, no secrets, least-privilege RBAC.
@@ -152,7 +152,7 @@ Cosmos history, Purview, Defender, policy. Reference: `references/bicep-ptn-aiml
 ## Repo layout
 
 ```
-infra/   src/   skills/   mock/   kb/   tests/   docs/
+app/{src, skills, mock, kb, tests}   infra/   docs/
 .github/{copilot-instructions.md, instructions/, agents/, prompts/}
 .env.example
 ```
@@ -162,7 +162,7 @@ infra/   src/   skills/   mock/   kb/   tests/   docs/
 
 ## What the AI Factory team does next (out of scope for the prototype)
 
-Replace `mock/` with real APIs · swap FileHistoryProvider → CosmosHistoryProvider ·
+Replace `app/mock/` with real APIs · swap FileHistoryProvider → CosmosHistoryProvider ·
 add prod auth (OBO/SP) · add Purview middleware if required · add Teams channel ·
 deploy to ACA with CI/CD.
 
