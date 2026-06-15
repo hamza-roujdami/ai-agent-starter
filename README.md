@@ -12,7 +12,7 @@ agents, and slash commands — so you go from an AI use case to a working, deplo
 
 ## What you get
 
-The prototype you build with this starter is a **self-hosted MAF agent on Azure**:
+The prototype you build with this starter is a **self-hosted Agentic AI Solution on Azure**:
 
 ```mermaid
 flowchart LR
