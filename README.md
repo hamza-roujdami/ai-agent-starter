@@ -1,6 +1,7 @@
 # ai-agent-starter
 
-A ready-to-clone baseline for building **AI agents on Azure with the Microsoft Agent Framework (MAF)**.
+A ready-to-clone baseline for building **AI agents on Azure with the Microsoft Agent Framework (MAF) and Microsoft Foundry**.
+
 Open it in VS Code and GitHub Copilot is pre-configured with the stack, coding rules, three specialized
 agents, and slash commands — so you go from an AI use case to a working, deployable prototype fast.
 
@@ -11,7 +12,7 @@ agents, and slash commands — so you go from an AI use case to a working, deplo
 
 ## What you get
 
-The prototype you build with this starter is a **self-hosted MAF agent on Azure Container Apps**:
+The prototype you build with this starter is a **self-hosted MAF agent on Azure**:
 
 ```mermaid
 flowchart LR
